@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <bpmn:collaboration id="Collaboration_1cmp5gn">
+    <bpmn:participant id="Participant_TranslationService" name="Translation service" processRef="nejedpe4-task-1" />
+  </bpmn:collaboration>
+  <bpmn:process id="nejedpe4-task-1" name="nejedpe4 task-1" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_1590i66">
+      <bpmn:lane id="Lane_QualityReviewer" name="Quality reviewer" />
+      <bpmn:lane id="Lane_Translator" name="Translator" />
+      <bpmn:lane id="Lane_System" name="System">
+        <bpmn:flowNodeRef>Event_PaymentReceived</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_OrderCancelledDueToNon-payment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_DeliverTranslation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_AwatingPaymentMaxDuration</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_SendOrderCancelledNotification</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_TranslationSuccessfullyDelivered</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_CalculateTranslationPrice</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_SendPaymentDetails</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_03vfiw2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_User" name="User">
+        <bpmn:flowNodeRef>StartEvent_TranslationRequestReceived</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_SubmitTranslationRequirements</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:intermediateCatchEvent id="Event_PaymentReceived" name="Payment received">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_16iy11f</bpmn:incoming>
+      <bpmn:outgoing>Flow_1km0ma9</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_13zkmp4" messageRef="Message_0gg8sgo" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:endEvent id="Event_OrderCancelledDueToNon-payment" name="Order cancelled due to non-payment">
+      <bpmn:incoming>Flow_1sia69d</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_DeliverTranslation" name="Deliver translation">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="deliver-translation" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=customerEmail" target="customerEmail" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_06yg41a</bpmn:incoming>
+      <bpmn:outgoing>Flow_0i77vaa</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:intermediateCatchEvent id="Event_AwatingPaymentMaxDuration" name="14 days">
+      <bpmn:incoming>Flow_127drsv</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i2tld8</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0imddot">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P14D</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:eventBasedGateway id="Gateway_1">
+      <bpmn:incoming>Flow_16iij92</bpmn:incoming>
+      <bpmn:outgoing>Flow_16iy11f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_127drsv</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:serviceTask id="Activity_SendOrderCancelledNotification" name="Send order cancelled notification">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-order-cancelled-notification" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=customerEmail" target="customerEmail" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1i2tld8</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sia69d</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_TranslationSuccessfullyDelivered" name="Translation successfully delivered">
+      <bpmn:incoming>Flow_0i77vaa</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:startEvent id="StartEvent_TranslationRequestReceived" name="Translation request received">
+      <bpmn:outgoing>Flow_0mfgbt6</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_CalculateTranslationPrice" name="Calculate translation price">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="calculate-translation-price" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=translationText" target="translationText" />
+          <zeebe:input source="=sourceLanguage" target="sourceLanguage" />
+          <zeebe:input source="=targetLanguage" target="targetLanguage" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0uuqbkm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1qcvxde</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_SendPaymentDetails" name="Send payment details">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-payment-details" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=customerEmail" target="customerEmail" />
+          <zeebe:input source="=translationPrice" target="translationPrice" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1qcvxde</bpmn:incoming>
+      <bpmn:outgoing>Flow_16iij92</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="Activity_SubmitTranslationRequirements" name="Submit translation requirements">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="translation-request-form" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0mfgbt6</bpmn:incoming>
+      <bpmn:outgoing>Flow_0uuqbkm</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_16iy11f" sourceRef="Gateway_1" targetRef="Event_PaymentReceived" />
+    <bpmn:sequenceFlow id="Flow_06yg41a" sourceRef="Activity_03vfiw2" targetRef="Activity_DeliverTranslation" />
+    <bpmn:sequenceFlow id="Flow_1sia69d" sourceRef="Activity_SendOrderCancelledNotification" targetRef="Event_OrderCancelledDueToNon-payment" />
+    <bpmn:sequenceFlow id="Flow_0i77vaa" sourceRef="Activity_DeliverTranslation" targetRef="Event_TranslationSuccessfullyDelivered" />
+    <bpmn:sequenceFlow id="Flow_127drsv" sourceRef="Gateway_1" targetRef="Event_AwatingPaymentMaxDuration" />
+    <bpmn:sequenceFlow id="Flow_1i2tld8" sourceRef="Event_AwatingPaymentMaxDuration" targetRef="Activity_SendOrderCancelledNotification" />
+    <bpmn:sequenceFlow id="Flow_16iij92" sourceRef="Activity_SendPaymentDetails" targetRef="Gateway_1" />
+    <bpmn:sequenceFlow id="Flow_0mfgbt6" sourceRef="StartEvent_TranslationRequestReceived" targetRef="Activity_SubmitTranslationRequirements" />
+    <bpmn:sequenceFlow id="Flow_0uuqbkm" sourceRef="Activity_SubmitTranslationRequirements" targetRef="Activity_CalculateTranslationPrice" />
+    <bpmn:sequenceFlow id="Flow_1qcvxde" sourceRef="Activity_CalculateTranslationPrice" targetRef="Activity_SendPaymentDetails" />
+    <bpmn:sequenceFlow id="Flow_1km0ma9" sourceRef="Event_PaymentReceived" targetRef="Activity_03vfiw2" />
+    <bpmn:task id="Activity_03vfiw2" name="TODO: translation subprocess">
+      <bpmn:incoming>Flow_1km0ma9</bpmn:incoming>
+      <bpmn:outgoing>Flow_06yg41a</bpmn:outgoing>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmn:message id="Message_0gg8sgo" name="Message_PaymentReceived">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="=&#34;paymentReceived&#34;" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cmp5gn">
+      <bpmndi:BPMNShape id="Participant_0d0bfow_di" bpmnElement="Participant_TranslationService" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1670" height="850" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1fatkdi_di" bpmnElement="Lane_User" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1640" height="130" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0b9gr02_di" bpmnElement="Lane_System" isHorizontal="true">
+        <dc:Bounds x="190" y="210" width="1640" height="400" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0oryov1_di" bpmnElement="Lane_Translator" isHorizontal="true">
+        <dc:Bounds x="190" y="610" width="1640" height="150" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1lo3lyi_di" bpmnElement="Lane_QualityReviewer" isHorizontal="true">
+        <dc:Bounds x="190" y="760" width="1640" height="170" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_096rk8p_di" bpmnElement="Event_PaymentReceived">
+        <dc:Bounds x="722" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="695" y="338" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1p4uz79_di" bpmnElement="Event_OrderCancelledDueToNon-payment">
+        <dc:Bounds x="722" y="502" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="702" y="545" width="78" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_10h44jp_di" bpmnElement="Activity_DeliverTranslation">
+        <dc:Bounds x="1700" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1ctfx5r_di" bpmnElement="Event_AwatingPaymentMaxDuration">
+        <dc:Bounds x="603" y="402" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="554" y="413" width="39" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1cinomo_di" bpmnElement="Gateway_1">
+        <dc:Bounds x="596" y="285" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hs73xu_di" bpmnElement="Activity_SendOrderCancelledNotification">
+        <dc:Bounds x="690" y="380" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1lf3yey_di" bpmnElement="Event_TranslationSuccessfullyDelivered">
+        <dc:Bounds x="1732" y="392" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1720" y="440" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0vguz82" bpmnElement="StartEvent_TranslationRequestReceived">
+        <dc:Bounds x="232" y="125" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="209" y="168" width="82" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0yznkdf" bpmnElement="Activity_CalculateTranslationPrice">
+        <dc:Bounds x="311" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zmqkz7_di" bpmnElement="Activity_SendPaymentDetails">
+        <dc:Bounds x="456" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1hji5g9" bpmnElement="Activity_SubmitTranslationRequirements">
+        <dc:Bounds x="311" y="103" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03vfiw2_di" bpmnElement="Activity_03vfiw2">
+        <dc:Bounds x="1140" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_16iy11f_di" bpmnElement="Flow_16iy11f">
+        <di:waypoint x="646" y="310" />
+        <di:waypoint x="722" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06yg41a_di" bpmnElement="Flow_06yg41a">
+        <di:waypoint x="1240" y="310" />
+        <di:waypoint x="1700" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1sia69d_di" bpmnElement="Flow_1sia69d">
+        <di:waypoint x="740" y="460" />
+        <di:waypoint x="740" y="502" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i77vaa_di" bpmnElement="Flow_0i77vaa">
+        <di:waypoint x="1750" y="350" />
+        <di:waypoint x="1750" y="392" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_127drsv_di" bpmnElement="Flow_127drsv">
+        <di:waypoint x="621" y="335" />
+        <di:waypoint x="621" y="402" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i2tld8_di" bpmnElement="Flow_1i2tld8">
+        <di:waypoint x="639" y="420" />
+        <di:waypoint x="690" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_16iij92_di" bpmnElement="Flow_16iij92">
+        <di:waypoint x="556" y="310" />
+        <di:waypoint x="596" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_1pkl47o" bpmnElement="Flow_0mfgbt6">
+        <di:waypoint x="268" y="143" />
+        <di:waypoint x="311" y="143" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_0mhbojl" bpmnElement="Flow_0uuqbkm">
+        <di:waypoint x="361" y="183" />
+        <di:waypoint x="361" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1qcvxde_di" bpmnElement="Flow_1qcvxde">
+        <di:waypoint x="411" y="310" />
+        <di:waypoint x="456" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1km0ma9_di" bpmnElement="Flow_1km0ma9">
+        <di:waypoint x="758" y="310" />
+        <di:waypoint x="1140" y="310" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

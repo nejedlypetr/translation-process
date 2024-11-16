@@ -1,0 +1,94 @@
+{
+  "components": [
+    {
+      "label": "Text for translation",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1vh7j1j",
+        "columns": null
+      },
+      "id": "Field_0lytp7v",
+      "key": "translationText",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Source language",
+      "values": [
+        {
+          "label": "Czech",
+          "value": "czech"
+        },
+        {
+          "label": "German",
+          "value": "german"
+        },
+        {
+          "label": "English",
+          "value": "english"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_1grdeja",
+        "columns": null
+      },
+      "id": "Field_17mvq6m",
+      "key": "sourceLanguage",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Select",
+      "values": [
+        {
+          "label": "Czech",
+          "value": "czech"
+        },
+        {
+          "label": "German",
+          "value": "german"
+        },
+        {
+          "label": "English",
+          "value": "english"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_0jexbx5",
+        "columns": null
+      },
+      "id": "Field_0yyehp3",
+      "key": "targetLanguage",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Email",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_11b9da8",
+        "columns": null
+      },
+      "id": "Field_0wty05i",
+      "key": "customerEmail",
+      "validate": {
+        "validationType": "email",
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "translation-request-form",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.29.0"
+  },
+  "schemaVersion": 17
+}
