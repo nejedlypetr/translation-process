@@ -2,11 +2,14 @@ package cz.cvut.fel.tpa.camunda.worker;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
+import cz.cvut.fel.tpa.camunda.model.enums.SourceLanguage;
+import cz.cvut.fel.tpa.camunda.model.enums.FormalityLevel;
+import cz.cvut.fel.tpa.camunda.model.enums.TargetAudience;
+import cz.cvut.fel.tpa.camunda.model.enums.TargetLanguage;
+import cz.cvut.fel.tpa.camunda.model.enums.Urgency;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
@@ -26,18 +29,86 @@ public class PaymentWorker {
     @JobWorker(type = "calculate-translation-price")
     public Map<String, Double> calculateTranslationPrice(
             @Variable(name = "translationText") String translationText,
-            @Variable(name = "sourceLanguage") String sourceLanguage,
-            @Variable(name = "targetLanguage") String targetLanguage) {
-
-        // TODO: price calculation logic
-        // LOG.info("All variables received: {}", job.getVariables());
-
+            @Variable(name = "sourceLanguage") SourceLanguage sourceLanguage,
+            @Variable(name = "targetLanguage") TargetLanguage targetLanguage,
+            @Variable(name = "formalityLevel") FormalityLevel formalityLevel,
+            @Variable(name = "targetAudience") TargetAudience targetAudience,
+            @Variable(name = "urgency") Urgency urgency) {
         LOG.info("Calculating translation price...");
 
-        final double price = 100.0;
+        // Base price per character (in cents)
+        double basePrice = calculateBasePrice(sourceLanguage, targetLanguage);
 
-        LOG.info("Final translation price: ${}", price);
-        return Map.of("translationPrice", price);
+        // Calculate total characters (spaces included)
+        int characterCount = translationText.length();
+
+        // Calculate initial price based on character count
+        double price = basePrice * characterCount;
+
+        // Apply urgency multiplier
+        double urgencyMultiplier = switch (urgency) {
+            case standard -> 1.0;
+            case express -> 1.5;
+        };
+        price *= urgencyMultiplier;
+
+        // Apply formality level multiplier
+        double formalityMultiplier = switch (formalityLevel) {
+            case informal -> 1.0;
+            case formal -> 1.2; // Formal texts require more attention
+        };
+        price *= formalityMultiplier;
+
+        // Apply target audience multiplier
+        double audienceMultiplier = switch (targetAudience) {
+            case children -> 1.3; // Requires special adaptation
+            case teenagers -> 1.2;
+            case adults -> 1.0;
+            case seniors -> 1.1;
+            case professionals -> 1.4; // Requires domain knowledge
+            case academic -> 1.5; // Requires highest precision
+            case generalPublic -> 1.0;
+            case technicalUsers -> 1.3;
+        };
+        price *= audienceMultiplier;
+
+        // Convert cents to dollars and round to 2 decimal places
+        double finalPrice = Math.round(price) / 100.0;
+
+        // Minimum price threshold
+        double originalPrice = finalPrice;
+        finalPrice = Math.max(finalPrice, 20.0);
+        if (originalPrice < 20.0) {
+            LOG.info("Price adjusted to minimum threshold: ${} -> ${}", originalPrice, finalPrice);
+        }
+
+        LOG.info("Price calculation breakdown:");
+        LOG.info("Character count: {}", characterCount);
+        LOG.info("Base price per character: ${}", basePrice / 100.0);
+        LOG.info("Urgency multiplier: {}", urgencyMultiplier);
+        LOG.info("Formality multiplier: {}", formalityMultiplier);
+        LOG.info("Audience multiplier: {}", audienceMultiplier);
+        LOG.info("Final translation price: ${}", finalPrice);
+
+        return Map.of("translationPrice", finalPrice);
+    }
+
+    private double calculateBasePrice(SourceLanguage source, TargetLanguage target) {
+        // Base price in cents per character for different language combinations
+        if (source == SourceLanguage.english && target == TargetLanguage.czech
+                || source == SourceLanguage.czech && target == TargetLanguage.english) {
+            return 0.8;
+        }
+        if (source == SourceLanguage.german && target == TargetLanguage.czech
+                || source == SourceLanguage.czech && target == TargetLanguage.german) {
+            return 1.0;
+        }
+        if (source == SourceLanguage.english && target == TargetLanguage.german
+                || source == SourceLanguage.german && target == TargetLanguage.english) {
+            return 0.9;
+        }
+        // Default price for any other combination
+        return 1.2;
     }
 
     @JobWorker(type = "send-payment-details")
@@ -65,9 +136,8 @@ public class PaymentWorker {
 
             try {
                 // Simulate payment delay
-                Thread.sleep(delay);
-
                 LOG.info("MOCK PAYMENT: Payment will be sent in {} seconds", delay / 1000);
+                Thread.sleep(delay);
 
                 zeebeClient.newPublishMessageCommand()
                         .messageName("Message_PaymentReceived")

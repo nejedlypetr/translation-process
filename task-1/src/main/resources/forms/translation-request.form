@@ -1,14 +1,55 @@
 {
   "components": [
     {
-      "label": "Text for translation",
-      "type": "textarea",
+      "text": "## Translation Request",
+      "type": "text",
       "layout": {
         "row": "Row_1vh7j1j",
         "columns": null
       },
-      "id": "Field_0lytp7v",
-      "key": "translationText",
+      "id": "Field_07wwpmb"
+    },
+    {
+      "label": "Email",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_1r2sjsa",
+        "columns": 8
+      },
+      "id": "Field_0wty05i",
+      "key": "customerEmail",
+      "validate": {
+        "validationType": "email",
+        "required": true
+      }
+    },
+    {
+      "type": "separator",
+      "layout": {
+        "row": "Row_1bgqi8u",
+        "columns": null
+      },
+      "id": "Field_0bfggay"
+    },
+    {
+      "label": "Formality Level",
+      "values": [
+        {
+          "label": "Formal",
+          "value": "formal"
+        },
+        {
+          "label": "Informal",
+          "value": "informal"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_1200gsy",
+        "columns": null
+      },
+      "id": "Field_0lyfuax",
+      "key": "formalityLevel",
       "validate": {
         "required": true
       }
@@ -31,7 +72,7 @@
       ],
       "type": "select",
       "layout": {
-        "row": "Row_1grdeja",
+        "row": "Row_0i4s8bl",
         "columns": null
       },
       "id": "Field_17mvq6m",
@@ -41,7 +82,79 @@
       }
     },
     {
-      "label": "Select",
+      "label": "Target Audience",
+      "values": [
+        {
+          "label": "Children",
+          "value": "children"
+        },
+        {
+          "label": "Teenagers",
+          "value": "teenagers"
+        },
+        {
+          "label": "Adults",
+          "value": "adults"
+        },
+        {
+          "label": "Seniors",
+          "value": "seniors"
+        },
+        {
+          "label": "Professionals",
+          "value": "professionals"
+        },
+        {
+          "label": "Academic",
+          "value": "academic"
+        },
+        {
+          "label": "General Public",
+          "value": "generalPublic"
+        },
+        {
+          "label": "Technical Users",
+          "value": "technicalUsers"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_1200gsy",
+        "columns": null
+      },
+      "id": "Field_056tba7",
+      "key": "targetAudience",
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "generalPublic"
+    },
+    {
+      "label": "Urgency",
+      "values": [
+        {
+          "label": "Normal",
+          "value": "normal"
+        },
+        {
+          "label": "Express",
+          "value": "express"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_1200gsy",
+        "columns": null
+      },
+      "id": "Field_01278za",
+      "key": "urgency",
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "normal"
+    },
+    {
+      "label": "Traget Language",
       "values": [
         {
           "label": "Czech",
@@ -58,7 +171,7 @@
       ],
       "type": "select",
       "layout": {
-        "row": "Row_0jexbx5",
+        "row": "Row_0i4s8bl",
         "columns": null
       },
       "id": "Field_0yyehp3",
@@ -68,16 +181,15 @@
       }
     },
     {
-      "label": "Email",
-      "type": "textfield",
+      "label": "Text for translation",
+      "type": "textarea",
       "layout": {
-        "row": "Row_11b9da8",
+        "row": "Row_0s662q3",
         "columns": null
       },
-      "id": "Field_0wty05i",
-      "key": "customerEmail",
+      "id": "Field_0lytp7v",
+      "key": "translationText",
       "validate": {
-        "validationType": "email",
         "required": true
       }
     }
