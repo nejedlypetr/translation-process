@@ -33,7 +33,7 @@ public class CamundaApplication implements CommandLineRunner {
 
 		try {
 			LOG.info("Creating new instance of process {}", processId);
-			var createdInstance = zeebeClient.newCreateInstanceCommand()
+			zeebeClient.newCreateInstanceCommand()
 					.bpmnProcessId(processId)
 					.latestVersion()
 					.send()

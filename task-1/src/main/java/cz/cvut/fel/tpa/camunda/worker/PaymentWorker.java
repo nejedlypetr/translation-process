@@ -47,7 +47,7 @@ public class PaymentWorker {
 
         // Apply urgency multiplier
         double urgencyMultiplier = switch (urgency) {
-            case standard -> 1.0;
+            case normal -> 1.0;
             case express -> 1.5;
         };
         price *= urgencyMultiplier;
