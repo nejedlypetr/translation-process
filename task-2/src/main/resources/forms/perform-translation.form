@@ -1,0 +1,205 @@
+{
+  "components": [
+    {
+      "text": "### Translate the text below, given these requirements:",
+      "type": "text",
+      "layout": {
+        "row": "Row_157ov7w",
+        "columns": null
+      },
+      "id": "Field_15lk6xv"
+    },
+    {
+      "label": "Formality level",
+      "values": [
+        {
+          "label": "Formal",
+          "value": "formal"
+        },
+        {
+          "label": "Informal",
+          "value": "informal"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_02eij5g",
+        "columns": null
+      },
+      "id": "Field_1rwv2dp",
+      "key": "formalityLevel",
+      "readonly": true
+    },
+    {
+      "label": "Target Audience",
+      "values": [
+        {
+          "label": "Children",
+          "value": "children"
+        },
+        {
+          "label": "Teenagers",
+          "value": "teenagers"
+        },
+        {
+          "label": "Adults",
+          "value": "adults"
+        },
+        {
+          "label": "Seniors",
+          "value": "seniors"
+        },
+        {
+          "label": "Professionals",
+          "value": "professionals"
+        },
+        {
+          "label": "Academic",
+          "value": "academic"
+        },
+        {
+          "label": "General Public",
+          "value": "generalPublic"
+        },
+        {
+          "label": "Technical Users",
+          "value": "technicalUsers"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_02eij5g",
+        "columns": null
+      },
+      "id": "Field_0dgkhth",
+      "key": "targetAudience",
+      "readonly": true
+    },
+    {
+      "label": "Urgency",
+      "values": [
+        {
+          "label": "Normal",
+          "value": "normal"
+        },
+        {
+          "label": "Express",
+          "value": "express"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_02eij5g",
+        "columns": null
+      },
+      "id": "Field_0o8bci6",
+      "key": "urgency",
+      "readonly": true
+    },
+    {
+      "label": "Source Language",
+      "values": [
+        {
+          "label": "Czech",
+          "value": "czech"
+        },
+        {
+          "label": "German",
+          "value": "german"
+        },
+        {
+          "label": "English",
+          "value": "english"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_05s2uox",
+        "columns": null
+      },
+      "id": "Field_0snhohg",
+      "key": "sourceLanguage",
+      "readonly": true
+    },
+    {
+      "label": "Target Language",
+      "values": [
+        {
+          "label": "Czech",
+          "value": "czech"
+        },
+        {
+          "label": "English",
+          "value": "english"
+        },
+        {
+          "label": "German",
+          "value": "german"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_05s2uox",
+        "columns": null
+      },
+      "id": "Field_0x7q1a0",
+      "key": "targetLanguage",
+      "readonly": true
+    },
+    {
+      "label": "Original Text",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_09ofnwy",
+        "columns": null
+      },
+      "id": "Field_1a1442h",
+      "key": "translationText",
+      "readonly": true
+    },
+    {
+      "label": "Reviewer's feedback",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_14v60iq",
+        "columns": null
+      },
+      "id": "Field_1996rzc",
+      "key": "reviewersFeedback",
+      "readonly": true,
+      "conditional": {
+        "hide": "=translationQuality = null or translationQuality = \"accepted\""
+      }
+    },
+    {
+      "type": "separator",
+      "layout": {
+        "row": "Row_0nagaxe",
+        "columns": null
+      },
+      "id": "Field_1u790p1"
+    },
+    {
+      "label": "Translated Text",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_03123tp",
+        "columns": null
+      },
+      "id": "Field_1nv8lre",
+      "key": "translatedText",
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_PerformTranslation",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.29.0"
+  },
+  "schemaVersion": 17
+}

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_TranslatorOrMachine" name="Translator or Machine Translation" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
+  <decision id="Decision_TranslatorOrMachine" name="Translator or Machine">
+    <informationRequirement id="InformationRequirement_1v4wkwd">
+      <requiredInput href="#InputData_Urgency" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1w8wdb6">
+      <requiredInput href="#InputData_FormalityLevel" />
+    </informationRequirement>
+    <informationRequirement id="InformationRequirement_1vupwya">
+      <requiredInput href="#InputData_TargetAudience" />
+    </informationRequirement>
+    <decisionTable id="DecisionTable_0a1caev" hitPolicy="FIRST">
+      <input id="Input_1" label="Target Audience">
+        <inputExpression id="InputExpression_1" typeRef="string">
+          <text>targetAudience</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0pogil0" label="Formality Level">
+        <inputExpression id="LiteralExpression_1ghc4q8" typeRef="string">
+          <text>formalityLevel</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1vnnk3r" label="Urgency">
+        <inputExpression id="LiteralExpression_0of04t7" typeRef="string">
+          <text>urgency</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Machine Translation" name="machineTranslation" typeRef="boolean" />
+      <rule id="DecisionRule_0cluaki">
+        <inputEntry id="UnaryTests_0s25rp5">
+          <text>"academic"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00o8r0r">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0rwv463">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gtait2">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1nyj2qg">
+        <inputEntry id="UnaryTests_0uds8qx">
+          <text>"academic","professionals","technicalUsers"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l5l299">
+          <text>"formal"</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1rvxmvy">
+          <text>"normal"</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1l7zzv4">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_14vpl8f">
+        <inputEntry id="UnaryTests_1ds7d8m">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dx6e8z">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0x1bor6">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1wz4j6d">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData id="InputData_Urgency" name="Urgency" />
+  <inputData id="InputData_FormalityLevel" name="Formality Level" />
+  <inputData id="InputData_TargetAudience" name="Target Audience" />
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="Decision_TranslatorOrMachine">
+        <dc:Bounds height="80" width="180" x="280" y="90" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1pwbj1a" dmnElementRef="InputData_Urgency">
+        <dc:Bounds height="45" width="125" x="157" y="278" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_04e1ve3" dmnElementRef="InformationRequirement_1v4wkwd">
+        <di:waypoint x="220" y="278" />
+        <di:waypoint x="325" y="190" />
+        <di:waypoint x="325" y="170" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0zwwn4k" dmnElementRef="InputData_FormalityLevel">
+        <dc:Bounds height="45" width="125" x="307" y="278" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0ad6kga" dmnElementRef="InformationRequirement_1w8wdb6">
+        <di:waypoint x="370" y="278" />
+        <di:waypoint x="370" y="190" />
+        <di:waypoint x="370" y="170" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_1mgey9p" dmnElementRef="InputData_TargetAudience">
+        <dc:Bounds height="45" width="125" x="457" y="278" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0yt7tns" dmnElementRef="InformationRequirement_1vupwya">
+        <di:waypoint x="520" y="278" />
+        <di:waypoint x="415" y="190" />
+        <di:waypoint x="415" y="170" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

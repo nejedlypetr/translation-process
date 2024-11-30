@@ -1,0 +1,234 @@
+{
+  "components": [
+    {
+      "text": "### Review translation quality:",
+      "type": "text",
+      "layout": {
+        "row": "Row_157ov7w",
+        "columns": null
+      },
+      "id": "Field_15lk6xv"
+    },
+    {
+      "label": "Formality level",
+      "values": [
+        {
+          "label": "Formal",
+          "value": "formal"
+        },
+        {
+          "label": "Informal",
+          "value": "informal"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_02eij5g",
+        "columns": null
+      },
+      "id": "Field_1rwv2dp",
+      "key": "formalityLevel",
+      "readonly": true
+    },
+    {
+      "label": "Target Audience",
+      "values": [
+        {
+          "label": "Children",
+          "value": "children"
+        },
+        {
+          "label": "Teenagers",
+          "value": "teenagers"
+        },
+        {
+          "label": "Adults",
+          "value": "adults"
+        },
+        {
+          "label": "Seniors",
+          "value": "seniors"
+        },
+        {
+          "label": "Professionals",
+          "value": "professionals"
+        },
+        {
+          "label": "Academic",
+          "value": "academic"
+        },
+        {
+          "label": "General Public",
+          "value": "generalPublic"
+        },
+        {
+          "label": "Technical Users",
+          "value": "technicalUsers"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_02eij5g",
+        "columns": null
+      },
+      "id": "Field_0dgkhth",
+      "key": "targetAudience",
+      "readonly": true
+    },
+    {
+      "label": "Urgency",
+      "values": [
+        {
+          "label": "Normal",
+          "value": "normal"
+        },
+        {
+          "label": "Express",
+          "value": "express"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_02eij5g",
+        "columns": null
+      },
+      "id": "Field_0o8bci6",
+      "key": "urgency",
+      "readonly": true
+    },
+    {
+      "label": "Source Language",
+      "values": [
+        {
+          "label": "Czech",
+          "value": "czech"
+        },
+        {
+          "label": "German",
+          "value": "german"
+        },
+        {
+          "label": "English",
+          "value": "english"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_05s2uox",
+        "columns": null
+      },
+      "id": "Field_0snhohg",
+      "key": "sourceLanguage",
+      "readonly": true
+    },
+    {
+      "label": "Target Language",
+      "values": [
+        {
+          "label": "Czech",
+          "value": "czech"
+        },
+        {
+          "label": "English",
+          "value": "english"
+        },
+        {
+          "label": "German",
+          "value": "german"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_05s2uox",
+        "columns": null
+      },
+      "id": "Field_0x7q1a0",
+      "key": "targetLanguage",
+      "readonly": true
+    },
+    {
+      "label": "Original Text",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_09ofnwy",
+        "columns": null
+      },
+      "id": "Field_1a1442h",
+      "key": "translationText",
+      "readonly": true
+    },
+    {
+      "label": "Translated Text",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_03123tp",
+        "columns": null
+      },
+      "id": "Field_1nv8lre",
+      "key": "translatedText",
+      "validate": {
+        "required": true
+      },
+      "readonly": true,
+      "description": "Review the quality of this translation."
+    },
+    {
+      "type": "separator",
+      "layout": {
+        "row": "Row_0p6s5zw",
+        "columns": null
+      },
+      "id": "Field_1u790p1"
+    },
+    {
+      "label": "Translation Quality",
+      "values": [
+        {
+          "label": "Accepted",
+          "value": "accepted"
+        },
+        {
+          "label": "Rejected",
+          "value": "rejected"
+        }
+      ],
+      "type": "select",
+      "layout": {
+        "row": "Row_0l1ptmx",
+        "columns": 5
+      },
+      "id": "Field_0qc91wh",
+      "key": "translationQuality",
+      "validate": {
+        "required": true
+      },
+      "defaultValue": "rejected"
+    },
+    {
+      "label": "Reviewer's Feedback",
+      "type": "textarea",
+      "layout": {
+        "row": "Row_1lpfayx",
+        "columns": null
+      },
+      "id": "Field_1z0ypl9",
+      "key": "reviewersFeedback",
+      "description": "Please provide detailed feedback on the translation quality.",
+      "conditional": {
+        "hide": "=translationQuality = \"accepted\""
+      },
+      "validate": {
+        "required": true
+      }
+    }
+  ],
+  "type": "default",
+  "id": "Form_ReviewTranslationQuality",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.6.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.29.0"
+  },
+  "schemaVersion": 17
+}
