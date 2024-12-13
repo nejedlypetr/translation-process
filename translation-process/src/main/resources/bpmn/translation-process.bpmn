@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
   <bpmn:collaboration id="Collaboration_1cmp5gn">
-    <bpmn:participant id="Participant_TranslationService" name="Translation service" processRef="nejedpe4-task-2" />
+    <bpmn:participant id="Participant_TranslationService" name="Translation service" processRef="nejedpe4-translation-process" />
   </bpmn:collaboration>
-  <bpmn:process id="nejedpe4-task-2" name="nejedpe4 task-2" isExecutable="true">
+  <bpmn:process id="nejedpe4-translation-process" name="nejedpe4 - Translation Process" isExecutable="true">
     <bpmn:laneSet id="LaneSet_1590i66">
       <bpmn:lane id="Lane_System" name="System">
         <bpmn:flowNodeRef>Timer_AwatingPaymentMaxDuration</bpmn:flowNodeRef>

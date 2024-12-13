@@ -36,7 +36,7 @@ public class CamundaApplication implements CommandLineRunner {
 	public void run(final String... args) {
 		LOG.info("STARTING Camunda Application...");
 
-		final String processId = "nejedpe4-task-2";
+		final String processId = "nejedpe4-translation-process";
 
 		try {
 			LOG.info("Creating new instance of process {}", processId);
