@@ -3,7 +3,6 @@ package cz.cvut.fel.tpa.camunda.worker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
 import io.camunda.zeebe.spring.client.annotation.JobWorker;
 import io.camunda.zeebe.spring.client.annotation.Variable;
 
@@ -19,6 +18,6 @@ public class NotificationWorker {
 
     @JobWorker(type = "notify-about-machine-translation-error")
     public void notifyAboutMachineTranslationError() {
-        LOG.info("Machine translation error notification sent to admin.");
+        LOG.info("Machine translation error notification sent to admin");
     }
 }

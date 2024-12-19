@@ -7,15 +7,15 @@
     <bpmn:laneSet id="LaneSet_1590i66">
       <bpmn:lane id="Lane_System" name="System">
         <bpmn:flowNodeRef>Timer_AwatingPaymentMaxDuration</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_CalculateTranslationPrice</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_TimerOrPayment</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_0i41reo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_02women</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Message_PaymentReceived</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_SendOrderCancelledNotification</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_SendPaymentDetails</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>EndEvent_OrderCancelledDueToNon-payment</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_DeliverTranslation</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_TranslationSuccessfullyDelivered</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_1e9kgqc</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_ExecuteTranslation</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_SendPaymentDetails</bpmn:flowNodeRef>
       </bpmn:lane>
       <bpmn:lane id="Lane_User" name="User">
         <bpmn:flowNodeRef>Activity_SubmitTranslationRequirements</bpmn:flowNodeRef>
@@ -24,73 +24,84 @@
     </bpmn:laneSet>
     <bpmn:intermediateCatchEvent id="Timer_AwatingPaymentMaxDuration" name="14 days">
       <bpmn:incoming>Flow_5</bpmn:incoming>
-      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+      <bpmn:outgoing>Flow_10lqi95</bpmn:outgoing>
       <bpmn:timerEventDefinition id="TimerEventDefinition_0imddot">
         <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">P14D</bpmn:timeDuration>
       </bpmn:timerEventDefinition>
     </bpmn:intermediateCatchEvent>
-    <bpmn:serviceTask id="Activity_CalculateTranslationPrice" name="Calculate translation price">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="calculate-translation-price" />
-        <zeebe:ioMapping>
-          <zeebe:input source="=translationText" target="translationText" />
-          <zeebe:input source="=sourceLanguage" target="sourceLanguage" />
-          <zeebe:input source="=targetLanguage" target="targetLanguage" />
-        </zeebe:ioMapping>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_2</bpmn:incoming>
-      <bpmn:outgoing>Flow_3</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_TranslationRequestReceived" targetRef="Activity_SubmitTranslationRequirements" />
-    <bpmn:sequenceFlow id="Flow_2" sourceRef="Activity_SubmitTranslationRequirements" targetRef="Activity_CalculateTranslationPrice" />
     <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_TimerOrPayment" targetRef="Timer_AwatingPaymentMaxDuration" />
-    <bpmn:sequenceFlow id="Flow_4" sourceRef="Activity_SendPaymentDetails" targetRef="Gateway_TimerOrPayment" />
     <bpmn:sequenceFlow id="Flow_8" sourceRef="Gateway_TimerOrPayment" targetRef="Message_PaymentReceived" />
-    <bpmn:sequenceFlow id="Flow_6" sourceRef="Timer_AwatingPaymentMaxDuration" targetRef="Activity_SendOrderCancelledNotification" />
-    <bpmn:sequenceFlow id="Flow_3" sourceRef="Activity_CalculateTranslationPrice" targetRef="Activity_SendPaymentDetails" />
-    <bpmn:sequenceFlow id="Flow_7" sourceRef="Activity_SendOrderCancelledNotification" targetRef="EndEvent_OrderCancelledDueToNon-payment" />
     <bpmn:eventBasedGateway id="Gateway_TimerOrPayment">
-      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:incoming>Flow_1sa1v5f</bpmn:incoming>
       <bpmn:outgoing>Flow_8</bpmn:outgoing>
       <bpmn:outgoing>Flow_5</bpmn:outgoing>
     </bpmn:eventBasedGateway>
+    <bpmn:userTask id="Activity_SubmitTranslationRequirements" name="Submit translation requirements">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formId="translation-request-form" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_10qqofh</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:startEvent id="StartEvent_TranslationRequestReceived" name="Translation request received">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Message_PaymentReceived" targetRef="Activity_ExecuteTranslation" />
+    <bpmn:sequenceFlow id="Flow_10lqi95" sourceRef="Timer_AwatingPaymentMaxDuration" targetRef="Event_02women" />
+    <bpmn:sequenceFlow id="Flow_10qqofh" sourceRef="Activity_SubmitTranslationRequirements" targetRef="Activity_0i41reo" />
+    <bpmn:serviceTask id="Activity_0i41reo" name="Calculate translation price" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="8" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="POST" target="method" />
+          <zeebe:input source="https://e251-193-203-104-245.ngrok-free.app/api/pricing/calculate" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+          <zeebe:input source="={ &#10;  &#34;translationText&#34;: translationText, &#10;  &#34;sourceLanguage&#34;: sourceLanguage, &#10;  &#34;targetLanguage&#34;: targetLanguage, &#10;  &#34;formalityLevel&#34;: formalityLevel, &#10;  &#34;targetAudience&#34;: targetAudience, &#10;  &#34;urgency&#34;: urgency &#10;}" target="body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="result" />
+          <zeebe:header key="resultExpression" value="response.body" />
+          <zeebe:header key="errorExpression" value="=if error.code != null then bpmnError(&#34;TRANSLATION_PROCESS_CANCELLED&#34;, error.message) else null" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_10qqofh</bpmn:incoming>
+      <bpmn:outgoing>Flow_1chhwgx</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:subProcess id="Activity_1e9kgqc" name="Translation process cancellation" triggeredByEvent="true">
+      <bpmn:startEvent id="Event_TranslationProcessCancellationStarted" name="Translation process cancelled">
+        <bpmn:outgoing>Flow_0c3s93l</bpmn:outgoing>
+        <bpmn:errorEventDefinition id="ErrorEventDefinition_10ozy42" errorRef="Error_0uva82q" />
+      </bpmn:startEvent>
+      <bpmn:serviceTask id="Activity_1f1i6ek" name="Send order cancelled notification">
+        <bpmn:extensionElements>
+          <zeebe:taskDefinition type="send-order-cancelled-notification" />
+          <zeebe:ioMapping>
+            <zeebe:input source="=customerEmail" target="customerEmail" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
+        <bpmn:incoming>Flow_0c3s93l</bpmn:incoming>
+        <bpmn:outgoing>Flow_0098kfq</bpmn:outgoing>
+      </bpmn:serviceTask>
+      <bpmn:sequenceFlow id="Flow_0c3s93l" sourceRef="Event_TranslationProcessCancellationStarted" targetRef="Activity_1f1i6ek" />
+      <bpmn:endEvent id="Event_096escg" name="Order cancelled">
+        <bpmn:incoming>Flow_0098kfq</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Flow_0098kfq" sourceRef="Activity_1f1i6ek" targetRef="Event_096escg" />
+    </bpmn:subProcess>
+    <bpmn:endEvent id="Event_02women" name="Translation process cancelled">
+      <bpmn:incoming>Flow_10lqi95</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1qym22h" errorRef="Error_0uva82q" />
+    </bpmn:endEvent>
     <bpmn:intermediateCatchEvent id="Message_PaymentReceived" name="Payment received">
       <bpmn:extensionElements />
       <bpmn:incoming>Flow_8</bpmn:incoming>
       <bpmn:outgoing>Flow_9</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_13zkmp4" messageRef="Message_0gg8sgo" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:serviceTask id="Activity_SendOrderCancelledNotification" name="Send order cancelled notification">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="send-order-cancelled-notification" />
-        <zeebe:ioMapping>
-          <zeebe:input source="=customerEmail" target="customerEmail" />
-        </zeebe:ioMapping>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_6</bpmn:incoming>
-      <bpmn:outgoing>Flow_7</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_SendPaymentDetails" name="Send payment details">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="send-payment-details" />
-        <zeebe:ioMapping>
-          <zeebe:input source="=customerEmail" target="customerEmail" />
-          <zeebe:input source="=translationPrice" target="translationPrice" />
-        </zeebe:ioMapping>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_3</bpmn:incoming>
-      <bpmn:outgoing>Flow_4</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_SubmitTranslationRequirements" name="Submit translation requirements">
-      <bpmn:extensionElements>
-        <zeebe:formDefinition formId="translation-request-form" />
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1</bpmn:incoming>
-      <bpmn:outgoing>Flow_2</bpmn:outgoing>
-    </bpmn:userTask>
-    <bpmn:startEvent id="StartEvent_TranslationRequestReceived" name="Translation request received">
-      <bpmn:outgoing>Flow_1</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:subProcess id="Activity_ExecuteTranslation" name="Execute translation">
       <bpmn:incoming>Flow_9</bpmn:incoming>
       <bpmn:outgoing>Flow_10</bpmn:outgoing>
@@ -115,7 +126,7 @@
           </zeebe:ioMapping>
           <zeebe:taskHeaders>
             <zeebe:header key="resultExpression" value="={openAiResponse: response.body.choices[1].message.content}" />
-            <zeebe:header key="errorExpression" value="=if error.code = &#34;500&#34; then bpmnError(&#34;openai_error&#34;, &#34;Got a 500 from openAI API.&#34;) else null" />
+            <zeebe:header key="errorExpression" value="=if error.code != null &#10;then &#10;bpmnError(&#34;openai_error&#34;, error.message) &#10;else &#10;  null" />
           </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_Machine</bpmn:incoming>
@@ -173,6 +184,7 @@
         <bpmn:outgoing>Flow_22</bpmn:outgoing>
       </bpmn:exclusiveGateway>
       <bpmn:boundaryEvent id="Event_OpenAIError" name="OpenAI error" attachedToRef="Activity_ExecuteMachineTranslation">
+        <bpmn:extensionElements />
         <bpmn:outgoing>Flow_OpenAIError</bpmn:outgoing>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_07wegpy" errorRef="Error_141qhw8" />
       </bpmn:boundaryEvent>
@@ -213,12 +225,6 @@
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="Flow_16" sourceRef="Activity_ProcessMachineTranslationResult" targetRef="Gateway_MergeFlowsBeforeReview" />
     </bpmn:subProcess>
-    <bpmn:sequenceFlow id="Flow_9" sourceRef="Message_PaymentReceived" targetRef="Activity_ExecuteTranslation" />
-    <bpmn:sequenceFlow id="Flow_11" sourceRef="Activity_DeliverTranslation" targetRef="EndEvent_TranslationSuccessfullyDelivered" />
-    <bpmn:sequenceFlow id="Flow_10" sourceRef="Activity_ExecuteTranslation" targetRef="Activity_DeliverTranslation" />
-    <bpmn:endEvent id="EndEvent_OrderCancelledDueToNon-payment" name="Order cancelled due to non-payment">
-      <bpmn:incoming>Flow_7</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:serviceTask id="Activity_DeliverTranslation" name="Deliver translation">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="deliver-translation" />
@@ -232,54 +238,51 @@
     <bpmn:endEvent id="EndEvent_TranslationSuccessfullyDelivered" name="Translation successfully delivered">
       <bpmn:incoming>Flow_11</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Activity_ExecuteTranslation" targetRef="Activity_DeliverTranslation" />
+    <bpmn:sequenceFlow id="Flow_11" sourceRef="Activity_DeliverTranslation" targetRef="EndEvent_TranslationSuccessfullyDelivered" />
+    <bpmn:serviceTask id="Activity_SendPaymentDetails" name="Send payment details">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="send-payment-details" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=customerEmail" target="customerEmail" />
+          <zeebe:input source="=translationPrice" target="translationPrice" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1chhwgx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1sa1v5f</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1chhwgx" sourceRef="Activity_0i41reo" targetRef="Activity_SendPaymentDetails" />
+    <bpmn:sequenceFlow id="Flow_1sa1v5f" sourceRef="Activity_SendPaymentDetails" targetRef="Gateway_TimerOrPayment" />
   </bpmn:process>
   <bpmn:message id="Message_0gg8sgo" name="Message_PaymentReceived">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="=&#34;paymentReceived&#34;" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:error id="Error_05qbqt3" name="INVALID_USER" errorCode="INVALID_USER" />
-  <bpmn:error id="Error_1bo9b8a" name="MY_CUSTOM_ERROR" errorCode="MY_CUSTOM_ERROR" />
   <bpmn:error id="Error_141qhw8" name="OpenAI_Error" errorCode="openai_error" />
+  <bpmn:error id="Error_0uva82q" name="Translation process cancelled" errorCode="TRANSLATION_PROCESS_CANCELLED" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cmp5gn">
       <bpmndi:BPMNShape id="Participant_0d0bfow_di" bpmnElement="Participant_TranslationService" isHorizontal="true">
-        <dc:Bounds x="160" y="80" width="990" height="440" />
+        <dc:Bounds x="160" y="80" width="1060" height="660" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_1fatkdi_di" bpmnElement="Lane_User" isHorizontal="true">
-        <dc:Bounds x="190" y="80" width="960" height="140" />
+        <dc:Bounds x="190" y="80" width="1030" height="140" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_0b9gr02_di" bpmnElement="Lane_System" isHorizontal="true">
-        <dc:Bounds x="190" y="220" width="960" height="300" />
+        <dc:Bounds x="190" y="220" width="1030" height="520" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1ctfx5r_di" bpmnElement="Timer_AwatingPaymentMaxDuration">
         <dc:Bounds x="603" y="402" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="554" y="413" width="39" height="14" />
+          <dc:Bounds x="600" y="443" width="39" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0yznkdf" bpmnElement="Activity_CalculateTranslationPrice">
-        <dc:Bounds x="311" y="270" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1cinomo_di" bpmnElement="Gateway_TimerOrPayment">
         <dc:Bounds x="596" y="285" width="50" height="50" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_096rk8p_di" bpmnElement="Message_PaymentReceived">
-        <dc:Bounds x="722" y="292" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="695" y="338" width="89" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1hs73xu_di" bpmnElement="Activity_SendOrderCancelledNotification">
-        <dc:Bounds x="690" y="380" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0zmqkz7_di" bpmnElement="Activity_SendPaymentDetails">
-        <dc:Bounds x="456" y="270" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1hji5g9" bpmnElement="Activity_SubmitTranslationRequirements">
         <dc:Bounds x="311" y="103" width="100" height="80" />
@@ -291,109 +294,120 @@
           <dc:Bounds x="209" y="168" width="82" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1jihkg7_di" bpmnElement="Activity_ExecuteTranslation">
-        <dc:Bounds x="840" y="270" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_0i41reo_di" bpmnElement="Activity_0i41reo">
+        <dc:Bounds x="311" y="270" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1p4uz79_di" bpmnElement="EndEvent_OrderCancelledDueToNon-payment">
-        <dc:Bounds x="862" y="402" width="36" height="36" />
+      <bpmndi:BPMNShape id="Activity_1e9kgqc_di" bpmnElement="Activity_1e9kgqc" isExpanded="true">
+        <dc:Bounds x="310" y="560" width="492" height="150" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1et558r_di" bpmnElement="Event_TranslationProcessCancellationStarted">
+        <dc:Bounds x="372" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="842" y="445" width="78" height="40" />
+          <dc:Bounds x="346" y="665" width="89" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1wjje3l" bpmnElement="Activity_1f1i6ek">
+        <dc:Bounds x="500" y="600" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1ppic47" bpmnElement="Event_096escg">
+        <dc:Bounds x="702" y="622" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="682" y="665" width="78" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0c3s93l_di" bpmnElement="Flow_0c3s93l">
+        <di:waypoint x="408" y="640" />
+        <di:waypoint x="500" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0098kfq_di" bpmnElement="Flow_0098kfq">
+        <di:waypoint x="600" y="640" />
+        <di:waypoint x="702" y="640" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_02women_di" bpmnElement="Event_02women">
+        <dc:Bounds x="702" y="402" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="676" y="445" width="89" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_096rk8p_di" bpmnElement="Message_PaymentReceived">
+        <dc:Bounds x="702" y="292" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="675" y="338" width="89" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jihkg7_di" bpmnElement="Activity_ExecuteTranslation">
+        <dc:Bounds x="800" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_10h44jp_di" bpmnElement="Activity_DeliverTranslation">
-        <dc:Bounds x="1000" y="270" width="100" height="80" />
+        <dc:Bounds x="970" y="270" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_1lf3yey_di" bpmnElement="EndEvent_TranslationSuccessfullyDelivered">
-        <dc:Bounds x="1032" y="402" width="36" height="36" />
+        <dc:Bounds x="1132" y="292" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1020" y="445" width="60" height="40" />
+          <dc:Bounds x="1120" y="335" width="60" height="40" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zmqkz7_di" bpmnElement="Activity_SendPaymentDetails">
+        <dc:Bounds x="456" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_1pkl47o" bpmnElement="Flow_1">
         <di:waypoint x="268" y="143" />
         <di:waypoint x="311" y="143" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="BPMNEdge_0mhbojl" bpmnElement="Flow_2">
-        <di:waypoint x="361" y="183" />
-        <di:waypoint x="361" y="270" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_127drsv_di" bpmnElement="Flow_5">
         <di:waypoint x="621" y="335" />
         <di:waypoint x="621" y="402" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_16iij92_di" bpmnElement="Flow_4">
-        <di:waypoint x="556" y="310" />
-        <di:waypoint x="596" y="310" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_16iy11f_di" bpmnElement="Flow_8">
         <di:waypoint x="646" y="310" />
-        <di:waypoint x="722" y="310" />
+        <di:waypoint x="702" y="310" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1i2tld8_di" bpmnElement="Flow_6">
+      <bpmndi:BPMNEdge id="Flow_1e5pbqt_di" bpmnElement="Flow_9">
+        <di:waypoint x="738" y="310" />
+        <di:waypoint x="800" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_10lqi95_di" bpmnElement="Flow_10lqi95">
         <di:waypoint x="639" y="420" />
-        <di:waypoint x="690" y="420" />
+        <di:waypoint x="702" y="420" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1qcvxde_di" bpmnElement="Flow_3">
+      <bpmndi:BPMNEdge id="Flow_10qqofh_di" bpmnElement="Flow_10qqofh">
+        <di:waypoint x="361" y="183" />
+        <di:waypoint x="361" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vgzu6h_di" bpmnElement="Flow_10">
+        <di:waypoint x="900" y="310" />
+        <di:waypoint x="970" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0i77vaa_di" bpmnElement="Flow_11">
+        <di:waypoint x="1070" y="310" />
+        <di:waypoint x="1132" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1chhwgx_di" bpmnElement="Flow_1chhwgx">
         <di:waypoint x="411" y="310" />
         <di:waypoint x="456" y="310" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1sia69d_di" bpmnElement="Flow_7">
-        <di:waypoint x="790" y="420" />
-        <di:waypoint x="862" y="420" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1e5pbqt_di" bpmnElement="Flow_9">
-        <di:waypoint x="758" y="310" />
-        <di:waypoint x="840" y="310" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0i77vaa_di" bpmnElement="Flow_11">
-        <di:waypoint x="1050" y="350" />
-        <di:waypoint x="1050" y="402" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1vgzu6h_di" bpmnElement="Flow_10">
-        <di:waypoint x="940" y="310" />
-        <di:waypoint x="1000" y="310" />
+      <bpmndi:BPMNEdge id="Flow_1sa1v5f_di" bpmnElement="Flow_1sa1v5f">
+        <di:waypoint x="556" y="310" />
+        <di:waypoint x="596" y="310" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
   <bpmndi:BPMNDiagram id="BPMNDiagram_0lpn1uk">
     <bpmndi:BPMNPlane id="BPMNPlane_0f8ai6j" bpmnElement="Activity_ExecuteTranslation">
+      <bpmndi:BPMNShape id="Activity_0241sve_di" bpmnElement="Activity_ExecuteMachineTranslation">
+        <dc:Bounds x="600" y="210" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_0apzmx5_di" bpmnElement="Gateway_MergeFlowsBeforeReview" isMarkerVisible="true">
         <dc:Bounds x="795" y="375" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="809" y="432" width="24" height="14" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_15z5two_di" bpmnElement="Activity_ReviewTranslationQuality">
-        <dc:Bounds x="911" y="360" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0phyr9o_di" bpmnElement="Activity_ReviseTranslation">
-        <dc:Bounds x="911" y="490" width="100" height="80" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1o0j4ga_di" bpmnElement="EndEvent_TranslationProcessingCompleted">
-        <dc:Bounds x="1223" y="382" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1214" y="425" width="55" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_0ykntwt_di" bpmnElement="Gateway_TranslationQualityAcceptable" isMarkerVisible="true">
-        <dc:Bounds x="1076" y="375" width="50" height="50" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="1071" y="325" width="60" height="40" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_03ym8ws_di" bpmnElement="StartEvent_TranslationProcessStarted">
-        <dc:Bounds x="172" y="242" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="152" y="285" width="76" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_1l714x0_di" bpmnElement="BusinessRuleTask_HumanOrMachineTranslation">
-        <dc:Bounds x="270" y="220" width="100" height="80" />
-        <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1pavyjn_di" bpmnElement="Gateway_MachineOrHumanTranslation" isMarkerVisible="true">
         <dc:Bounds x="495" y="235" width="50" height="50" />
@@ -405,12 +419,38 @@
         <dc:Bounds x="470" y="360" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0241sve_di" bpmnElement="Activity_ExecuteMachineTranslation">
-        <dc:Bounds x="600" y="210" width="100" height="80" />
+      <bpmndi:BPMNShape id="Activity_15z5two_di" bpmnElement="Activity_ReviewTranslationQuality">
+        <dc:Bounds x="911" y="360" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0phyr9o_di" bpmnElement="Activity_ReviseTranslation">
+        <dc:Bounds x="911" y="490" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0s8j1td_di" bpmnElement="Activity_SendNotificationAboutServiceErrorToAdmin">
         <dc:Bounds x="600" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1o0j4ga_di" bpmnElement="EndEvent_TranslationProcessingCompleted">
+        <dc:Bounds x="1223" y="382" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1214" y="425" width="55" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_03ym8ws_di" bpmnElement="StartEvent_TranslationProcessStarted">
+        <dc:Bounds x="172" y="242" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="152" y="285" width="76" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ykntwt_di" bpmnElement="Gateway_TranslationQualityAcceptable" isMarkerVisible="true">
+        <dc:Bounds x="1076" y="375" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1071" y="325" width="60" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1l714x0_di" bpmnElement="BusinessRuleTask_HumanOrMachineTranslation">
+        <dc:Bounds x="270" y="220" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_04tbeay_di" bpmnElement="Activity_ProcessMachineTranslationResult">
@@ -423,6 +463,13 @@
           <dc:Bounds x="658" y="173" width="64" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0yqoh8l_di" bpmnElement="SequenceFlow_Machine">
+        <di:waypoint x="545" y="260" />
+        <di:waypoint x="600" y="260" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="546" y="241" width="42" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0srswlg_di" bpmnElement="Flow_17">
         <di:waypoint x="570" y="400" />
         <di:waypoint x="795" y="400" />
@@ -432,13 +479,15 @@
         <di:waypoint x="820" y="530" />
         <di:waypoint x="820" y="425" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1dtxaym_di" bpmnElement="Flow_16">
-        <di:waypoint x="820" y="290" />
-        <di:waypoint x="820" y="375" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1yhs4hm_di" bpmnElement="Flow_18">
         <di:waypoint x="845" y="400" />
         <di:waypoint x="911" y="400" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ihidug_di" bpmnElement="Flow_14">
+        <di:waypoint x="600" y="120" />
+        <di:waypoint x="420" y="120" />
+        <di:waypoint x="420" y="400" />
+        <di:waypoint x="470" y="400" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0janehn_di" bpmnElement="Flow_19">
         <di:waypoint x="1011" y="400" />
@@ -452,11 +501,22 @@
           <dc:Bounds x="1113" y="447" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0pvvs7m_di" bpmnElement="Flow_OpenAIError">
+        <di:waypoint x="650" y="192" />
+        <di:waypoint x="650" y="160" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1x2r8z2_di" bpmnElement="Flow_22">
         <di:waypoint x="1126" y="400" />
         <di:waypoint x="1223" y="400" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="1151" y="382" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nojahg_di" bpmnElement="SequenceFlow_Human">
+        <di:waypoint x="520" y="285" />
+        <di:waypoint x="520" y="360" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="476" y="304" width="36" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1qrx9fd_di" bpmnElement="Flow_12">
@@ -467,33 +527,13 @@
         <di:waypoint x="370" y="260" />
         <di:waypoint x="495" y="260" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0yqoh8l_di" bpmnElement="SequenceFlow_Machine">
-        <di:waypoint x="545" y="260" />
-        <di:waypoint x="600" y="260" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="546" y="241" width="42" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0nojahg_di" bpmnElement="SequenceFlow_Human">
-        <di:waypoint x="520" y="285" />
-        <di:waypoint x="520" y="360" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="476" y="304" width="36" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1ihidug_di" bpmnElement="Flow_14">
-        <di:waypoint x="600" y="120" />
-        <di:waypoint x="420" y="120" />
-        <di:waypoint x="420" y="400" />
-        <di:waypoint x="470" y="400" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0l0ioon_di" bpmnElement="Flow_15">
         <di:waypoint x="700" y="250" />
         <di:waypoint x="770" y="250" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0pvvs7m_di" bpmnElement="Flow_OpenAIError">
-        <di:waypoint x="650" y="192" />
-        <di:waypoint x="650" y="160" />
+      <bpmndi:BPMNEdge id="Flow_1dtxaym_di" bpmnElement="Flow_16">
+        <di:waypoint x="820" y="290" />
+        <di:waypoint x="820" y="375" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+
 import cz.cvut.fel.tpa.camunda.model.enums.FormalityLevel;
 import cz.cvut.fel.tpa.camunda.model.enums.SourceLanguage;
 import cz.cvut.fel.tpa.camunda.model.enums.TargetAudience;
@@ -22,6 +24,7 @@ import io.camunda.zeebe.spring.client.annotation.Deployment;
 		"classpath:forms/*.form",
 		"classpath:dmn/*.dmn"
 })
+@ComponentScan(basePackages = { "cz.cvut.fel.tpa" })
 public class CamundaApplication implements CommandLineRunner {
 	private final static Logger LOG = LoggerFactory.getLogger(CamundaApplication.class);
 
@@ -45,7 +48,7 @@ public class CamundaApplication implements CommandLineRunner {
 					.latestVersion()
 					.variables(Map.of(
 							"urgency", Urgency.normal,
-							"customerEmail", "test@test.com",
+							"customerEmail", "nejedpe4@fel.cvut.cz",
 							"targetLanguage", TargetLanguage.czech,
 							"formalityLevel", FormalityLevel.informal,
 							"targetAudience", TargetAudience.children,
