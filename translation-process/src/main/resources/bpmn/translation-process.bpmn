@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0">
-  <bpmn:collaboration id="Collaboration_1cmp5gn">
+  <bpmn:collaboration id="Collaboration_TranslationProcess">
     <bpmn:participant id="Participant_TranslationService" name="Translation service" processRef="nejedpe4-translation-process" />
   </bpmn:collaboration>
   <bpmn:process id="nejedpe4-translation-process" name="nejedpe4 - Translation Process" isExecutable="true">
@@ -8,8 +8,8 @@
       <bpmn:lane id="Lane_System" name="System">
         <bpmn:flowNodeRef>Timer_AwatingPaymentMaxDuration</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_TimerOrPayment</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Activity_0i41reo</bpmn:flowNodeRef>
-        <bpmn:flowNodeRef>Event_02women</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Activity_CalculateTranslationPrice</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Event_TranslationProcessCancelled</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Message_PaymentReceived</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Activity_DeliverTranslation</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_TranslationSuccessfullyDelivered</bpmn:flowNodeRef>
@@ -48,15 +48,15 @@
       <bpmn:outgoing>Flow_1</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_9" sourceRef="Message_PaymentReceived" targetRef="Activity_ExecuteTranslation" />
-    <bpmn:sequenceFlow id="Flow_10lqi95" sourceRef="Timer_AwatingPaymentMaxDuration" targetRef="Event_02women" />
-    <bpmn:sequenceFlow id="Flow_10qqofh" sourceRef="Activity_SubmitTranslationRequirements" targetRef="Activity_0i41reo" />
-    <bpmn:serviceTask id="Activity_0i41reo" name="Calculate translation price" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="8" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
+    <bpmn:sequenceFlow id="Flow_10lqi95" sourceRef="Timer_AwatingPaymentMaxDuration" targetRef="Event_TranslationProcessCancelled" />
+    <bpmn:sequenceFlow id="Flow_10qqofh" sourceRef="Activity_SubmitTranslationRequirements" targetRef="Activity_CalculateTranslationPrice" />
+    <bpmn:serviceTask id="Activity_CalculateTranslationPrice" name="Calculate translation price" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="8" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="POST" target="method" />
-          <zeebe:input source="https://e251-193-203-104-245.ngrok-free.app/api/pricing/calculate" target="url" />
+          <zeebe:input source="https://698b-193-203-104-245.ngrok-free.app/api/pricing/calculate" target="url" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
           <zeebe:input source="20" target="readTimeoutInSeconds" />
           <zeebe:input source="={ &#10;  &#34;translationText&#34;: translationText, &#10;  &#34;sourceLanguage&#34;: sourceLanguage, &#10;  &#34;targetLanguage&#34;: targetLanguage, &#10;  &#34;formalityLevel&#34;: formalityLevel, &#10;  &#34;targetAudience&#34;: targetAudience, &#10;  &#34;urgency&#34;: urgency &#10;}" target="body" />
@@ -72,11 +72,11 @@
       <bpmn:outgoing>Flow_1chhwgx</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:subProcess id="Activity_1e9kgqc" name="Translation process cancellation" triggeredByEvent="true">
-      <bpmn:startEvent id="Event_TranslationProcessCancellationStarted" name="Translation process cancelled">
+      <bpmn:startEvent id="StartEvent_TranslationProcessCancellationStarted" name="Translation process cancelled">
         <bpmn:outgoing>Flow_0c3s93l</bpmn:outgoing>
         <bpmn:errorEventDefinition id="ErrorEventDefinition_10ozy42" errorRef="Error_0uva82q" />
       </bpmn:startEvent>
-      <bpmn:serviceTask id="Activity_1f1i6ek" name="Send order cancelled notification">
+      <bpmn:serviceTask id="Activity_SendOrderCancelledNotification" name="Send order cancelled notification">
         <bpmn:extensionElements>
           <zeebe:taskDefinition type="send-order-cancelled-notification" />
           <zeebe:ioMapping>
@@ -86,13 +86,13 @@
         <bpmn:incoming>Flow_0c3s93l</bpmn:incoming>
         <bpmn:outgoing>Flow_0098kfq</bpmn:outgoing>
       </bpmn:serviceTask>
-      <bpmn:sequenceFlow id="Flow_0c3s93l" sourceRef="Event_TranslationProcessCancellationStarted" targetRef="Activity_1f1i6ek" />
-      <bpmn:endEvent id="Event_096escg" name="Order cancelled">
+      <bpmn:sequenceFlow id="Flow_0c3s93l" sourceRef="StartEvent_TranslationProcessCancellationStarted" targetRef="Activity_SendOrderCancelledNotification" />
+      <bpmn:endEvent id="EndEvent_OrderCancelled" name="Order cancelled">
         <bpmn:incoming>Flow_0098kfq</bpmn:incoming>
       </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Flow_0098kfq" sourceRef="Activity_1f1i6ek" targetRef="Event_096escg" />
+      <bpmn:sequenceFlow id="Flow_0098kfq" sourceRef="Activity_SendOrderCancelledNotification" targetRef="EndEvent_OrderCancelled" />
     </bpmn:subProcess>
-    <bpmn:endEvent id="Event_02women" name="Translation process cancelled">
+    <bpmn:endEvent id="Event_TranslationProcessCancelled" name="Translation process cancelled">
       <bpmn:incoming>Flow_10lqi95</bpmn:incoming>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1qym22h" errorRef="Error_0uva82q" />
     </bpmn:endEvent>
@@ -251,7 +251,7 @@
       <bpmn:incoming>Flow_1chhwgx</bpmn:incoming>
       <bpmn:outgoing>Flow_1sa1v5f</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1chhwgx" sourceRef="Activity_0i41reo" targetRef="Activity_SendPaymentDetails" />
+    <bpmn:sequenceFlow id="Flow_1chhwgx" sourceRef="Activity_CalculateTranslationPrice" targetRef="Activity_SendPaymentDetails" />
     <bpmn:sequenceFlow id="Flow_1sa1v5f" sourceRef="Activity_SendPaymentDetails" targetRef="Gateway_TimerOrPayment" />
   </bpmn:process>
   <bpmn:message id="Message_0gg8sgo" name="Message_PaymentReceived">
@@ -262,7 +262,7 @@
   <bpmn:error id="Error_141qhw8" name="OpenAI_Error" errorCode="openai_error" />
   <bpmn:error id="Error_0uva82q" name="Translation process cancelled" errorCode="TRANSLATION_PROCESS_CANCELLED" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1cmp5gn">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_TranslationProcess">
       <bpmndi:BPMNShape id="Participant_0d0bfow_di" bpmnElement="Participant_TranslationService" isHorizontal="true">
         <dc:Bounds x="160" y="80" width="1060" height="660" />
         <bpmndi:BPMNLabel />
@@ -294,7 +294,7 @@
           <dc:Bounds x="209" y="168" width="82" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0i41reo_di" bpmnElement="Activity_0i41reo">
+      <bpmndi:BPMNShape id="Activity_0i41reo_di" bpmnElement="Activity_CalculateTranslationPrice">
         <dc:Bounds x="311" y="270" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
@@ -302,16 +302,16 @@
         <dc:Bounds x="310" y="560" width="492" height="150" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_1et558r_di" bpmnElement="Event_TranslationProcessCancellationStarted">
+      <bpmndi:BPMNShape id="Event_1et558r_di" bpmnElement="StartEvent_TranslationProcessCancellationStarted">
         <dc:Bounds x="372" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="346" y="665" width="89" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1wjje3l" bpmnElement="Activity_1f1i6ek">
+      <bpmndi:BPMNShape id="BPMNShape_1wjje3l" bpmnElement="Activity_SendOrderCancelledNotification">
         <dc:Bounds x="500" y="600" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1ppic47" bpmnElement="Event_096escg">
+      <bpmndi:BPMNShape id="BPMNShape_1ppic47" bpmnElement="EndEvent_OrderCancelled">
         <dc:Bounds x="702" y="622" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="682" y="665" width="78" height="14" />
@@ -325,7 +325,7 @@
         <di:waypoint x="600" y="640" />
         <di:waypoint x="702" y="640" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="Event_02women_di" bpmnElement="Event_02women">
+      <bpmndi:BPMNShape id="Event_02women_di" bpmnElement="Event_TranslationProcessCancelled">
         <dc:Bounds x="702" y="402" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="676" y="445" width="89" height="27" />
